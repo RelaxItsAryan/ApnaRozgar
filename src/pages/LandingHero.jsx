@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { ShieldCheck, Zap, Eye, Bot, FileText, Mic, Briefcase, Settings, Target } from 'lucide-react';
+import { ShieldCheck, Zap, Eye, Bot, FileText, Mic, Briefcase, Settings, Target, Building, Home, Heart, ExternalLink } from 'lucide-react';
 import { AccessibleButton } from '../App';
 import heroImg from '../assets/premium_hero_bg.png';
 import interview from '../assets/interview.jpg';
@@ -412,6 +412,96 @@ export default function LandingHero() {
                 Fast, responsive job search and application tools that work across assistive technologies.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Government Facilities Section ── */}
+      <section style={{ padding: '80px 24px', background: 'var(--bg-secondary)' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+            <h2 style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '16px', background: 'var(--primary-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              Government Schemes & Facilities
+            </h2>
+            <p style={{ fontSize: '1.15rem', color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto' }}>
+              Official resources and support programs designed to empower and assist persons with disabilities.
+            </p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px' }}>
+            
+            {/* Delhi Government Schemes */}
+            <a 
+              href="https://discomm.delhi.gov.in/discomm/schemes-and-facilities-persons-disabilities" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              style={{
+                display: 'flex', flexDirection: 'column', padding: '32px', background: 'var(--card-bg)', borderRadius: '24px', 
+                boxShadow: 'var(--card-shadow)', border: '1px solid var(--border)', transition: 'all 0.3s ease', textDecoration: 'none', color: 'inherit'
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-8px)'; e.currentTarget.style.borderColor = 'var(--accent-purple)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'var(--border)'; }}
+            >
+              <div style={{ width: '56px', height: '56px', borderRadius: '16px', background: 'rgba(37,99,235,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
+                <Building size={28} color="#2563EB" />
+              </div>
+              <h3 style={{ margin: '0 0 12px', fontSize: '1.4rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                Delhi State Facilities
+                <ExternalLink size={18} color="var(--text-muted)" />
+              </h3>
+              <p style={{ margin: 0, color: 'var(--text-muted)', lineHeight: '1.6', flex: 1 }}>
+                Explore various official schemes, concessions, and facilities provided by the State Commissioner for Persons with Disabilities, Delhi.
+              </p>
+            </a>
+
+            {/* Gharaunda Scheme */}
+            <a 
+              href="https://nationaltrust.nic.in/gharaunda-scheme/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              style={{
+                display: 'flex', flexDirection: 'column', padding: '32px', background: 'var(--card-bg)', borderRadius: '24px', 
+                boxShadow: 'var(--card-shadow)', border: '1px solid var(--border)', transition: 'all 0.3s ease', textDecoration: 'none', color: 'inherit'
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-8px)'; e.currentTarget.style.borderColor = 'var(--accent-purple)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'var(--border)'; }}
+            >
+              <div style={{ width: '56px', height: '56px', borderRadius: '16px', background: 'rgba(16,185,129,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
+                <Home size={28} color="#10B981" />
+              </div>
+              <h3 style={{ margin: '0 0 12px', fontSize: '1.4rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                Gharaunda Scheme
+                <ExternalLink size={18} color="var(--text-muted)" />
+              </h3>
+              <p style={{ margin: 0, color: 'var(--text-muted)', lineHeight: '1.6', flex: 1 }}>
+                Group Home and Rehabilitation Activities providing supported living for adults with autism, cerebral palsy, mental retardation, and multiple disabilities.
+              </p>
+            </a>
+
+            {/* Niramaya Scheme */}
+            <a 
+              href="http://nationaltrust.nic.in/scheme/niramaya-scheme/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              style={{
+                display: 'flex', flexDirection: 'column', padding: '32px', background: 'var(--card-bg)', borderRadius: '24px', 
+                boxShadow: 'var(--card-shadow)', border: '1px solid var(--border)', transition: 'all 0.3s ease', textDecoration: 'none', color: 'inherit'
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-8px)'; e.currentTarget.style.borderColor = 'var(--accent-purple)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'var(--border)'; }}
+            >
+              <div style={{ width: '56px', height: '56px', borderRadius: '16px', background: 'rgba(239,68,68,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
+                <Heart size={28} color="#EF4444" />
+              </div>
+              <h3 style={{ margin: '0 0 12px', fontSize: '1.4rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                Niramaya Scheme
+                <ExternalLink size={18} color="var(--text-muted)" />
+              </h3>
+              <p style={{ margin: 0, color: 'var(--text-muted)', lineHeight: '1.6', flex: 1 }}>
+                A comprehensive Health Insurance Scheme providing affordable health insurance coverage to persons with disabilities nationwide.
+              </p>
+            </a>
+
           </div>
         </div>
       </section>

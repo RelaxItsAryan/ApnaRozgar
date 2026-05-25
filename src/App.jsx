@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback, createContext, useContext } from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, MessageCircle, LogOut, Crown, Moon, Sun, Home, Briefcase, Target, FileText, Zap, User, Settings, Accessibility } from 'lucide-react';
+import { Menu, X, MessageCircle, LogOut, Crown, Moon, Sun, Home, Briefcase, Target, FileText, Zap, User, Settings } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import LandingHero from './pages/LandingHero';
 import ProfileBuilder from './pages/ProfileBuilder';
@@ -265,31 +265,6 @@ const Header = () => {
           </AccessibleButton>
 
           <button
-            onClick={() => {
-              const event = new CustomEvent('toggle-accessibility-menu');
-              document.dispatchEvent(event);
-            }}
-            className="desktop-only"
-            aria-label="Open Accessibility Menu"
-            style={{
-              background: 'var(--bg-secondary)',
-              border: '1px solid var(--border)',
-              borderRadius: '50%',
-              width: '40px',
-              height: '40px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              color: 'var(--text-primary)',
-              marginLeft: '8px',
-              transition: 'all 0.3s ease'
-            }}
-          >
-            <Accessibility size={20} />
-          </button>
-
-          <button
             onClick={toggleTheme}
             className="desktop-only"
             aria-label="Toggle dark mode"
@@ -403,28 +378,6 @@ const Header = () => {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                 <span style={{ fontWeight: '700', fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Navigation</span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <button
-                    onClick={() => {
-                      const event = new CustomEvent('toggle-accessibility-menu');
-                      document.dispatchEvent(event);
-                      closeMobileMenu();
-                    }}
-                    style={{
-                      background: 'var(--bg-secondary)',
-                      border: '1px solid var(--border)',
-                      borderRadius: '50%',
-                      width: '36px',
-                      height: '36px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      color: 'var(--text-primary)'
-                    }}
-                    aria-label="Toggle Accessibility Menu"
-                  >
-                    <Accessibility size={16} />
-                  </button>
                   <button
                     onClick={toggleTheme}
                     style={{
