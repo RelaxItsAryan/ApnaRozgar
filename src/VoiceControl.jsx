@@ -62,12 +62,12 @@ export default function VoiceControl({ embedded = false }) {
       if (v.length > 0) {
         const voicesArray = Array.from(v);
         setVoices(voicesArray);
-        
+
         // Prioritize Microsoft Ravi, then any English (India) voice, then any English voice
         const raviVoice = voicesArray.find(voice => voice.name.includes('Ravi'));
         const indianVoice = voicesArray.find(voice => voice.lang === 'en-IN' || voice.lang === 'en_IN');
         const englishVoice = voicesArray.find(voice => voice.lang.startsWith('en'));
-        
+
         const bestVoice = raviVoice || indianVoice || englishVoice || voicesArray[0];
         setSelectedVoice(bestVoice);
         return true;
@@ -286,6 +286,54 @@ export default function VoiceControl({ embedded = false }) {
         showFeedback('Clear button not found', 'error');
       }
     },
+
+    // ===== JOB APPLICATION COMMANDS =====
+    'view and apply': () => {
+      const btn = document.querySelector('[data-voice-command="view and apply"]');
+      if (btn) {
+        btn.click();
+        showFeedback('Opening job details', 'success');
+      } else {
+        showFeedback('View and apply button not found', 'error');
+      }
+    },
+    'apply job': () => {
+      const btn = document.getElementById('apply-job-btn');
+      if (btn) {
+        btn.click();
+        showFeedback('Applying for job', 'success');
+      } else {
+        showFeedback('Apply button not found', 'error');
+      }
+    },
+    'apply now': () => {
+      const btn = document.getElementById('apply-job-btn');
+      if (btn) {
+        btn.click();
+        showFeedback('Applying for job', 'success');
+      } else {
+        showFeedback('Apply button not found', 'error');
+      }
+    },
+    'add resume': () => {
+      const input = document.getElementById('resume-input');
+      if (input) {
+        input.focus();
+        showFeedback('Resume field focused', 'success');
+      } else {
+        // If the area is not showing yet, click apply once to show it
+        const btn = document.getElementById('apply-job-btn');
+        if (btn) {
+          btn.click();
+          showFeedback('Opening resume field', 'info');
+          setTimeout(() => {
+            document.getElementById('resume-input')?.focus();
+          }, 300);
+        } else {
+          showFeedback('Resume field not found', 'error');
+        }
+      }
+    },
   };
 
   // Helper function to find and type in chat input
@@ -463,6 +511,9 @@ export default function VoiceControl({ embedded = false }) {
         { phrase: '"Interview prep"', action: 'Practice for interviews' },
         { phrase: '"Go back"', action: 'Previous page' },
         { phrase: '"Search for [query]"', action: 'Search jobs' },
+        { phrase: '"View and apply"', action: 'Open selected job details' },
+        { phrase: '"Apply job"', action: 'Apply for the current job' },
+        { phrase: '"Add resume"', action: 'Focus resume input field' },
       ]
     },
     {

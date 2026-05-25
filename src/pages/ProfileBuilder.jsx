@@ -60,6 +60,7 @@ export default function ProfileBuilder() {
       workPreference: formData.get('workMode') || '',
       salaryMin: document.getElementById('salaryMin')?.value || '',
       salaryMax: document.getElementById('salaryMax')?.value || '',
+      resumeLink: document.getElementById('resumeLink')?.value || '',
       availableFrom: document.getElementById('availableFrom')?.value || '',
       openToRelocation: document.getElementById('openReloc')?.checked || false,
       createdAt: new Date().toISOString()
@@ -268,6 +269,20 @@ export default function ProfileBuilder() {
                       <Upload size={20} /> Choose Image
                     </label>
                   </div>
+                </div>
+
+                <div style={{ marginTop: '32px' }}>
+                  <label htmlFor="resumeLink">Resume Link (Google Drive / LinkedIn / Portfolio)</label>
+                  <p id="resumeLinkHelp" style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '12px' }}>
+                    Paste a link to your resume for quick applications. This will minimize friction when applying to jobs.
+                  </p>
+                  <input 
+                    id="resumeLink" 
+                    type="url" 
+                    placeholder="https://drive.google.com/..." 
+                    aria-describedby="resumeLinkHelp"
+                    defaultValue={userProfile?.resumeLink || ''}
+                  />
                 </div>
               </motion.fieldset>
             )}

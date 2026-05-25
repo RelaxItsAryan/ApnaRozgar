@@ -87,9 +87,9 @@ export default function JobListings() {
   };
 
   const logoColor = (name) => {
-    const c = ['#6B46C1','#0D9488','#D97706','#DC2626','#2563EB','#059669'];
+    const c = ['#6B46C1', '#0D9488', '#D97706', '#DC2626', '#2563EB', '#059669'];
     let h = 0;
-    for (let i = 0; i < (name||'').length; i++) h = (name||'').charCodeAt(i) + ((h << 5) - h);
+    for (let i = 0; i < (name || '').length; i++) h = (name || '').charCodeAt(i) + ((h << 5) - h);
     return c[Math.abs(h) % c.length];
   };
 
@@ -100,7 +100,7 @@ export default function JobListings() {
     if (days === 0) return 'Today';
     if (days === 1) return '1 day ago';
     if (days < 30) return `${days} days ago`;
-    return `${Math.floor(days/30)} months ago`;
+    return `${Math.floor(days / 30)} months ago`;
   };
 
   const cardVariants = {
@@ -211,38 +211,38 @@ export default function JobListings() {
         <main style={{ flex: 1, minWidth: 0 }}>
           {/* Verification Check */}
           {!authLoading && isAuthenticated && !verificationLoading && !isVerified && (
-            <motion.div 
-              initial={{ opacity:0, y:-20 }}
-              animate={{ opacity:1, y:0 }}
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
               style={{
-                padding:'24px',
-                borderRadius:'16px',
-                background:'linear-gradient(135deg, rgba(249,115,22,0.08), rgba(239,68,68,0.08))',
-                border:'2px solid rgba(249,115,22,0.3)',
-                marginBottom:'28px'
+                padding: '24px',
+                borderRadius: '16px',
+                background: 'linear-gradient(135deg, rgba(249,115,22,0.08), rgba(239,68,68,0.08))',
+                border: '2px solid rgba(249,115,22,0.3)',
+                marginBottom: '28px'
               }}
             >
-              <div style={{ display:'flex', gap:'16px', alignItems:'flex-start' }}>
-                <div style={{ flexShrink:0, marginTop:'2px' }}>
+              <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+                <div style={{ flexShrink: 0, marginTop: '2px' }}>
                   <Lock size={24} color='#f97316' />
                 </div>
-                <div style={{ flex:1 }}>
-                  <h2 style={{ fontSize:'1.1rem', fontWeight:'700', margin:'0 0 8px 0', color:'#f97316' }}>Certificate Verification Recommended</h2>
-                  <p style={{ color:'var(--text-muted)', margin:'0 0 12px 0', lineHeight:'1.5' }}>
+                <div style={{ flex: 1 }}>
+                  <h2 style={{ fontSize: '1.1rem', fontWeight: '700', margin: '0 0 8px 0', color: '#f97316' }}>Certificate Verification Recommended</h2>
+                  <p style={{ color: 'var(--text-muted)', margin: '0 0 12px 0', lineHeight: '1.5' }}>
                     To build trust with employers, we recommend verifying your certificate. While you can still view and apply for jobs, verified candidates are 5x more likely to get hired and gain instant credibility.
                   </p>
-                  <div style={{ display:'flex', gap:'12px', flexWrap:'wrap' }}>
-                    <AccessibleButton 
+                  <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                    <AccessibleButton
                       onClick={() => navigate('/profile')}
-                      style={{ fontSize:'0.85rem', padding:'0 16px', minHeight:'36px', display:'flex', alignItems:'center', gap:'6px' }}
+                      style={{ fontSize: '0.85rem', padding: '0 16px', minHeight: '36px', display: 'flex', alignItems: 'center', gap: '6px' }}
                     >
                       <FileCheck size={14} />
                       Go to Verify Certificate
                     </AccessibleButton>
-                    <AccessibleButton 
+                    <AccessibleButton
                       variant="outline"
                       onClick={() => navigate('/interview-prep')}
-                      style={{ fontSize:'0.85rem', padding:'0 16px', minHeight:'36px' }}
+                      style={{ fontSize: '0.85rem', padding: '0 16px', minHeight: '36px' }}
                     >
                       Continue Learning
                     </AccessibleButton>
@@ -254,7 +254,7 @@ export default function JobListings() {
 
           {!verificationLoading && isAuthenticated && !isVerified && (
             <>
-              <p style={{ textAlign:'center', color:'var(--text-muted)', marginBottom:'28px' }}>
+              <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginBottom: '28px' }}>
                 💡 Upload your certificate photo to get verified and unlock job opportunities.
               </p>
             </>
@@ -352,11 +352,18 @@ export default function JobListings() {
                     {/* Actions */}
                     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'flex-end', gap: '12px', flexShrink: 0 }}>
                       {job.accessibilityScore != null && (
-                        <div style={{ textAlign: 'center' }}>
-                          <div style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--accent-purple)', lineHeight: 1 }}>
+                        <div style={{ textAlign: 'center', minWidth: '80px' }}>
+                          <div style={{
+                            fontSize: '1.6rem',
+                            fontWeight: '900',
+                            background: 'var(--primary-gradient)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            lineHeight: 1
+                          }}>
                             {Math.round((job.accessibilityScore / 18) * 100)}%
                           </div>
-                          <div style={{ fontSize: '0.7rem', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Accessibility Match</div>
+                          <div style={{ fontSize: '0.65rem', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '4px' }}>Accessibility</div>
                         </div>
                       )}
                       <div style={{ display: 'flex', gap: '8px' }}>
@@ -373,7 +380,11 @@ export default function JobListings() {
                           <Bookmark size={17} fill={isSaved ? 'white' : 'none'} />
                         </button>
                         <Link to={`/jobs/${job.id}`} style={{ textDecoration: 'none' }}>
-                          <AccessibleButton style={{ minHeight: '38px', padding: '0 16px', fontSize: '0.88rem' }}>
+                          <AccessibleButton
+                            className="view-apply-btn"
+                            data-voice-command="view and apply"
+                            style={{ minHeight: '38px', padding: '0 16px', fontSize: '0.88rem' }}
+                          >
                             View & Apply
                           </AccessibleButton>
                         </Link>

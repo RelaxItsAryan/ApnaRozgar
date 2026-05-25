@@ -114,6 +114,7 @@ export const applyToJob = async (jobId, candidateId, candidateData) => {
       candidateId,
       candidateName: candidateData.name,
       candidateSkills: candidateData.skills || [],
+      candidateResume: candidateData.resume || '',
       appliedAt: new Date().toISOString(),
       status: 'pending',
       isPremium: candidateData.isPremium || false

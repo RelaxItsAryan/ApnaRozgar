@@ -38,13 +38,33 @@ export default function JobDetail() {
     setTimeout(() => setToast(null), 4000);
   };
 
+  const [resume, setResume] = useState('');
+  const [showResumeInput, setShowResumeInput] = useState(false);
+
   const handleApply = async () => {
     if (!isAuthenticated) { navigate('/auth'); return; }
+
+    if (!resume && !showResumeInput) {
+      setShowResumeInput(true);
+      showToast('Please provide a resume link to apply.', 'info');
+      setTimeout(() => {
+        const input = document.getElementById('resume-input');
+        input?.focus();
+      }, 100);
+      return;
+    }
+
+    if (!resume) {
+      showToast('Resume link is required.', 'error');
+      return;
+    }
+
     setApplying(true);
     const result = await applyToJob(id, user.uid, {
       name: userProfile?.name || user?.displayName || 'Applicant',
       skills: userProfile?.skills || [],
-      isPremium: userProfile?.isPremium || false
+      isPremium: userProfile?.isPremium || false,
+      resume: resume
     });
     if (result.success) {
       setApplied(true);
@@ -67,7 +87,7 @@ export default function JobDetail() {
     if (days === 0) return 'Today';
     if (days === 1) return '1 day ago';
     if (days < 30) return `${days} days ago`;
-    return `${Math.floor(days/30)} months ago`;
+    return `${Math.floor(days / 30)} months ago`;
   };
 
   if (loading) return (
@@ -191,22 +211,37 @@ export default function JobDetail() {
 
             {/* Score gauge */}
             {job.accessibilityScore != null && (
-              <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-                <div style={{ position: 'relative', width: '120px', height: '120px', margin: '0 auto' }}>
-                  <svg width="120" height="120" style={{ transform: 'rotate(-90deg)', position: 'absolute' }}>
-                    <circle cx="60" cy="60" r="50" stroke="var(--border)" strokeWidth="9" fill="none" />
-                    <circle cx="60" cy="60" r="50" stroke="var(--accent-purple)" strokeWidth="9" fill="none"
-                      strokeDasharray={2 * Math.PI * 50}
-                      strokeDashoffset={2 * Math.PI * 50 * (1 - job.accessibilityScore / 18)}
-                      strokeLinecap="round" />
+              <div style={{ textAlign: 'center', marginBottom: '24px', position: 'relative' }}>
+                <div style={{ position: 'relative', width: '130px', height: '130px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {/* Outer Glow */}
+                  <div style={{
+                    position: 'absolute', inset: '5px', borderRadius: '50%',
+                    boxShadow: `0 0 20px ${color}30`,
+                    background: 'var(--bg-primary)', zIndex: 0
+                  }} />
+
+                  <svg width="120" height="120" style={{ transform: 'rotate(-90deg)', position: 'absolute', zIndex: 1 }}>
+                    <defs>
+                      <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="var(--accent-purple)" />
+                        <stop offset="100%" stopColor="#9F7AEA" />
+                      </linearGradient>
+                    </defs>
+                    <circle cx="60" cy="60" r="52" stroke="var(--border)" strokeWidth="10" fill="none" opacity="0.3" />
+                    <circle cx="60" cy="60" r="52" stroke="url(#scoreGradient)" strokeWidth="10" fill="none"
+                      strokeDasharray={2 * Math.PI * 52}
+                      strokeDashoffset={2 * Math.PI * 52 * (1 - job.accessibilityScore / 18)}
+                      strokeLinecap="round"
+                      style={{ transition: 'stroke-dashoffset 1s ease-out' }} />
                   </svg>
-                  <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                    <span style={{ fontSize: '1.6rem', fontWeight: '800', color: 'var(--accent-purple)', lineHeight: 1 }}>
+
+                  <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}>
+                    <span style={{ fontSize: '1.8rem', fontWeight: '900', background: 'var(--primary-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', lineHeight: 1 }}>
                       {Math.round((job.accessibilityScore / 18) * 100)}%
                     </span>
                   </div>
                 </div>
-                <p style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-muted)', marginTop: '8px' }}>Accessibility Score</p>
+                <p style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-muted)', marginTop: '12px', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Accessibility Score</p>
               </div>
             )}
 
@@ -225,6 +260,40 @@ export default function JobDetail() {
               ))}
             </div>
 
+            {/* Resume Input Area */}
+            {!applied && showResumeInput && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                style={{ marginBottom: '16px' }}
+              >
+                <label htmlFor="resume-input" style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '8px', color: 'var(--text-muted)' }}>
+                  RESUME LINK (Google Drive/Dropbox)
+                </label>
+                <input
+                  id="resume-input"
+                  type="url"
+                  placeholder="Paste your resume link here..."
+                  value={resume}
+                  onChange={(e) => setResume(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    borderRadius: '12px',
+                    border: '2px solid var(--accent-purple)',
+                    background: 'var(--bg-primary)',
+                    color: 'var(--text-primary)',
+                    fontSize: '0.9rem',
+                    outline: 'none',
+                    boxSizing: 'border-box'
+                  }}
+                />
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '6px' }}>
+                  💡 Tip: Make sure the link is accessible.
+                </p>
+              </motion.div>
+            )}
+
             {/* Apply button */}
             {applied ? (
               <div style={{ padding: '14px', textAlign: 'center', background: 'rgba(5,150,105,0.1)', border: '1px solid rgba(5,150,105,0.3)', borderRadius: '12px', color: 'var(--success)', fontWeight: '700', marginBottom: '12px' }}>
@@ -232,11 +301,19 @@ export default function JobDetail() {
               </div>
             ) : (
               <AccessibleButton
+                id="apply-job-btn"
                 onClick={handleApply}
                 disabled={applying}
-                style={{ width: '100%', minHeight: '52px', fontSize: '1rem', marginBottom: '12px', opacity: applying ? 0.7 : 1 }}
+                style={{ width: '100%', minHeight: '52px', fontSize: '1rem', marginBottom: '12px', opacity: applying ? 0.7 : 1, position: 'relative', overflow: 'hidden' }}
               >
-                {applying ? 'Submitting…' : isAuthenticated ? 'Apply Now' : 'Sign In to Apply'}
+                {applying ? 'Submitting…' : isAuthenticated ? (showResumeInput ? 'Confirm & Apply' : 'Apply Now') : 'Sign In to Apply'}
+                {isAuthenticated && !showResumeInput && !applying && (
+                  <motion.div
+                    style={{ position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.1)' }}
+                    animate={{ x: ['-100%', '100%'] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+                  />
+                )}
               </AccessibleButton>
             )}
 

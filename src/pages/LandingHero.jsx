@@ -50,7 +50,7 @@ function Dots({ total, current, onSelect }) {
 export default function LandingHero() {
   const [current, setCurrent] = useState(0);
   const { scrollY } = useScroll();
-  
+
   // Transform scroll position (0 to 600px) to blur amount (0 to 12px)
   const blurAmount = useTransform(scrollY, [0, 600], ['blur(0px)', 'blur(12px)']);
   // Optionally dim the background slightly as we scroll
@@ -83,7 +83,7 @@ export default function LandingHero() {
   return (
     <div style={{ position: 'relative', minHeight: '100vh' }}>
       {/* Fixed Background Layer with Scroll Blur */}
-      <motion.div 
+      <motion.div
         style={{
           position: 'fixed',
           inset: 0,
@@ -94,9 +94,9 @@ export default function LandingHero() {
           filter: blurAmount,
         }}
       />
-      
+
       {/* Subtle Dark Overlay that increases on scroll */}
-      <motion.div 
+      <motion.div
         style={{
           position: 'fixed',
           inset: 0,
@@ -164,8 +164,8 @@ export default function LandingHero() {
                 lineHeight: '1.7',
               }}
             >
-              Connecting highly talented professionals with disabilities to employers who value true inclusion.{' '}
-              <strong style={{ color: 'var(--text-primary)' }}>500+ accessible roles.</strong> Zero barriers.
+              {' '}
+              <strong style={{ color: 'var(--text-primary)' }}>Connecting highly talented professionals with disabilities to employers who value true inclusion. 500+ accessible roles.</strong>
             </motion.p>
 
             <motion.div
