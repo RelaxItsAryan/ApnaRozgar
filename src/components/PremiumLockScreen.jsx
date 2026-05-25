@@ -51,7 +51,7 @@ const PremiumLockScreen = ({ featureName, description }) => {
           {featureName} is a Premium Feature
         </h2>
         
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', marginBottom: '32px', lineHeight: 1.6 }}>
+        <p style={{ color: 'white', fontSize: '1.1rem', marginBottom: '32px', lineHeight: 1.6, opacity: 0.9 }}>
           {description || "Upgrade to ApnaRozgaar Premium to unlock this feature and supercharge your career journey."}
         </p>
         
@@ -62,7 +62,7 @@ const PremiumLockScreen = ({ featureName, description }) => {
           >
             Upgrade to Premium
           </AccessibleButton>
-          <AccessibleButton variant="ghost" onClick={() => navigate(-1)}>
+          <AccessibleButton variant="ghost" onClick={() => navigate(-1)} style={{ color: 'white' }}>
             Go Back
           </AccessibleButton>
         </div>

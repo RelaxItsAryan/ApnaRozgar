@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback, createContext, useContext } from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, MessageCircle, LogOut, Crown, Moon, Sun, Home, Briefcase, Target, FileText, Zap, User, Settings } from 'lucide-react';
+import { Menu, X, MessageCircle, LogOut, Crown, Moon, Sun, Home, Briefcase, Target, FileText, Zap, User, Settings, Accessibility } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import LandingHero from './pages/LandingHero';
 import ProfileBuilder from './pages/ProfileBuilder';
@@ -18,7 +18,7 @@ import InterviewPrepPage from './pages/InterviewPrepPage';
 import AboutUs from './pages/AboutUs';
 import ResumeBuilder from './pages/ResumeBuilder';
 import UserProfile from './pages/UserProfile';
-// import PricingPage from './pages/PricingPage';
+import PricingPage from './pages/PricingPage';
 import { useAuth } from './context/AuthContext';
 import faviconImg from './public/favicon.png';
 import CookieConsent from './components/CookieConsent';
@@ -260,9 +260,34 @@ const Header = () => {
         </Link>
 
         <div className="header-actions" style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'flex-end', flex: '1 1 auto' }}>
-          {/* <AccessibleButton variant="premium" className="desktop-only" onClick={() => navigate('/pricing')} aria-label="Premium Membership" style={{ gap: '9px', marginRight: '0px' }}>
+          <AccessibleButton variant="premium" className="desktop-only" onClick={() => navigate('/pricing')} aria-label="Premium Membership" style={{ gap: '9px', marginRight: '0px' }}>
             👑 Premium
-          </AccessibleButton> */}
+          </AccessibleButton>
+
+          <button
+            onClick={() => {
+              const event = new CustomEvent('toggle-accessibility-menu');
+              document.dispatchEvent(event);
+            }}
+            className="desktop-only"
+            aria-label="Open Accessibility Menu"
+            style={{
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border)',
+              borderRadius: '50%',
+              width: '40px',
+              height: '40px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              color: 'var(--text-primary)',
+              marginLeft: '8px',
+              transition: 'all 0.3s ease'
+            }}
+          >
+            <Accessibility size={20} />
+          </button>
 
           <button
             onClick={toggleTheme}
@@ -378,6 +403,28 @@ const Header = () => {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                 <span style={{ fontWeight: '700', fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Navigation</span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <button
+                    onClick={() => {
+                      const event = new CustomEvent('toggle-accessibility-menu');
+                      document.dispatchEvent(event);
+                      closeMobileMenu();
+                    }}
+                    style={{
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border)',
+                      borderRadius: '50%',
+                      width: '36px',
+                      height: '36px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      color: 'var(--text-primary)'
+                    }}
+                    aria-label="Toggle Accessibility Menu"
+                  >
+                    <Accessibility size={16} />
+                  </button>
                   <button
                     onClick={toggleTheme}
                     style={{
@@ -795,7 +842,7 @@ const AnimatedRoutes = () => {
         } />
         <Route path="/pricing" element={
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3 }}>
-            {/* <PricingPage /> */}
+            <PricingPage />
           </motion.div>
         } />
       </Routes>
@@ -830,10 +877,8 @@ const AppLayout = () => {
         {!(isChatPage || isResumeBuilderPage) && <Footer />}
       </div>
 
-      {/* Accessibility features moved to AccessibilityMenu, we only need KeyboardShortcutsHelp here */}
-
       {/* Chatbot quick launch button above voice control */}
-      {/* {!isChatPage && (
+      {!isChatPage && (
         <button
           type="button"
           onClick={() => navigate('/chat')}
@@ -859,7 +904,7 @@ const AppLayout = () => {
         >
           <MessageCircle size={24} />
         </button>
-      )} */}
+      )}
 
       {/* Unified Accessibility Menu */}
       <AccessibilityMenu />

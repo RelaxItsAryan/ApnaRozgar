@@ -13,6 +13,12 @@ export default function AccessibilityMenu() {
     document.dispatchEvent(event);
   };
 
+  React.useEffect(() => {
+    const handleToggle = () => setIsOpen(prev => !prev);
+    document.addEventListener('toggle-accessibility-menu', handleToggle);
+    return () => document.removeEventListener('toggle-accessibility-menu', handleToggle);
+  }, []);
+
   return (
     <div style={{ position: 'fixed', right: '24px', bottom: '10px', zIndex: 9999 }}>
       {/* Floating Toggle Button */}
