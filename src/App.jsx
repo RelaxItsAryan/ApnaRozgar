@@ -833,7 +833,7 @@ const AppLayout = () => {
       {/* Accessibility features moved to AccessibilityMenu, we only need KeyboardShortcutsHelp here */}
 
       {/* Chatbot quick launch button above voice control */}
-      {!isChatPage && (
+      {/* {!isChatPage && (
         <button
           type="button"
           onClick={() => navigate('/chat')}
@@ -859,7 +859,7 @@ const AppLayout = () => {
         >
           <MessageCircle size={24} />
         </button>
-      )}
+      )} */}
 
       {/* Unified Accessibility Menu */}
       <AccessibilityMenu />
