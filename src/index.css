@@ -3,7 +3,7 @@
 
 :root {
   /* Colors - Ultra Premium Monochrome Light Theme */
-  --bg-primary: #FCFBFF;
+  --bg-primary: #f1f0e8;
   --bg-secondary: #F3F1F9;
   --bg-dark: #000000;
 
@@ -131,6 +131,19 @@ body {
   -webkit-font-smoothing: antialiased;
   position: relative;
   overflow-x: hidden;
+}
+
+.grain-bg {
+  background-color: #d0eff4 !important;
+  background-image:
+    radial-gradient(#d1d0c5 0.8px, transparent 0.8px),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E") !important;
+  background-size: 24px 24px, 180px 180px !important;
+  background-attachment: fixed !important;
+}
+
+body.hide-grain {
+  background-image: none !important;
 }
 
 /* Base setup to add animated mesh blobs behind the app */

@@ -750,7 +750,14 @@ const AppLayout = () => {
       <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
         <Header />
 
-        <main id="main-content" data-focus-area="main-content" tabIndex="-1" style={{ flex: 1, paddingTop: isHomePage ? '0' : '100px' }} role="main">
+        <main 
+          id="main-content" 
+          data-focus-area="main-content" 
+          tabIndex="-1" 
+          className={!isHomePage ? 'grain-bg' : ''}
+          style={{ flex: 1, paddingTop: isHomePage ? '0' : '100px' }} 
+          role="main"
+        >
           <AnimatedRoutes />
         </main>
 

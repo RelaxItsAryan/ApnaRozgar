@@ -264,8 +264,10 @@ export default function LandingHero() {
         </motion.div>
       </section>
 
-      {/* ── Platform Features Section ── */}
-      <section style={{ padding: '100px 24px' }}>
+      {/* ── All Sections Below Hero with Grain Background ── */}
+      <div className="grain-bg" style={{ position: 'relative', zIndex: 1 }}>
+        {/* ── Platform Features Section ── */}
+        <section style={{ padding: '100px 24px' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '60px' }}>
             <p style={{ margin: 0, fontWeight: 700, color: 'var(--accent-teal)', textTransform: 'uppercase', letterSpacing: '0.2em', fontSize: '0.85rem' }}>
@@ -417,7 +419,7 @@ export default function LandingHero() {
       </section>
 
       {/* ── Government Facilities Section ── */}
-      <section style={{ padding: '80px 24px', background: 'var(--bg-secondary)' }}>
+      <section style={{ padding: '80px 24px' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '60px' }}>
             <h2 style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '16px', background: 'var(--primary-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
@@ -505,6 +507,7 @@ export default function LandingHero() {
           </div>
         </div>
       </section>
+      </div>
     </div>
   );
 }
