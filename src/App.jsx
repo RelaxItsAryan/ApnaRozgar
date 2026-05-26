@@ -733,7 +733,10 @@ const AnimatedRoutes = () => {
 const AppLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [showSplash, setShowSplash] = useState(true);
+  const [showSplash, setShowSplash] = useState(() => {
+    // Check if splash has already been shown in this session
+    return !sessionStorage.getItem('splash-shown');
+  });
   const isChatPage = location.pathname === '/chat';
   const isResumeBuilderPage = location.pathname === '/resume-builder';
   const isHomePage = location.pathname === '/';
@@ -741,7 +744,14 @@ const AppLayout = () => {
   return (
     <>
       <AnimatePresence>
-        {showSplash && <SplashScreen finishLoading={() => setShowSplash(false)} />}
+        {showSplash && (
+          <SplashScreen 
+            finishLoading={() => {
+              setShowSplash(false);
+              sessionStorage.setItem('splash-shown', 'true');
+            }} 
+          />
+        )}
       </AnimatePresence>
 
       {/* 1. Skip to main content link must be first in body/app */}
