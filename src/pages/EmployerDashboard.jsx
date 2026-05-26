@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Briefcase, Trash2, PlusCircle, CheckCircle, Users, Crown } from 'lucide-react';
-import { AccessibleButton } from '../App';
+import { AccessibleButton } from '../components/AccessibleButton';
 import { useAuth } from '../context/AuthContext';
 import { createJob, getJobsByEmployer, deleteJob } from '../firebase/jobs';
 

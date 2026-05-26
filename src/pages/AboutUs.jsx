@@ -5,7 +5,7 @@ import {
   Users, Target, ShieldCheck, Eye,
   Ear, HeartHandshake, ArrowRight, Sparkles, Building2, Briefcase
 } from 'lucide-react';
-import { AccessibleButton } from '../App';
+import { AccessibleButton } from '../components/AccessibleButton';
 
 export default function AboutUs() {
   const containerVariants = {

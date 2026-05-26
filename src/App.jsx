@@ -27,88 +27,12 @@ import './App.css';
 import './voiceNavigator';
 import './accessibilityDetector';
 
-/**
- * Visual Alert System for Deaf/HoH Users
- * Provides visual feedback for events that would normally only have audio alerts
- */
-export const announceToScreenReader = (message) => {
-  const announcer = document.getElementById('a11y-announcer');
-  if (announcer) {
-    announcer.textContent = '';
-    // Small delay to ensure the change is detected
-    setTimeout(() => {
-      announcer.textContent = message;
-    }, 50);
-  }
-};
+import { announceToScreenReader, triggerVisualAlert } from './utils/a11y';
 
-export const triggerVisualAlert = (element) => {
-  if (element) {
-    element.classList.add('visual-alert');
-    setTimeout(() => {
-      element.classList.remove('visual-alert');
-    }, 3000);
-  }
-};
+// Import for use within App.jsx, and re-export for other files
+import { AccessibleButton } from './components/AccessibleButton';
+export { AccessibleButton } from './components/AccessibleButton';
 
-// Base accessible button component used throughout
-export const AccessibleButton = ({ children, onClick, className = '', variant = 'primary', style, ...props }) => {
-  const baseStyle = {
-    minHeight: '44px',
-    borderRadius: '16px',
-    fontWeight: '600',
-    padding: '0 24px',
-    border: 'none',
-    cursor: 'pointer',
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '10px',
-    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-    fontFamily: "'Inter', sans-serif",
-    fontSize: '0.95rem',
-    position: 'relative',
-    overflow: 'hidden',
-  };
-
-  const variants = {
-    primary: {
-      background: 'var(--primary-gradient)',
-      color: 'white',
-      border: '1px solid var(--border)',
-      boxShadow: '0 8px 20px -6px var(--accent-purple-glow)'
-    },
-    outline: {
-      background: 'rgba(255,255,255,0.7)',
-      backdropFilter: 'blur(8px)',
-      border: '1.5px solid rgba(37, 99, 235, 0.2)',
-      color: 'var(--text-primary)',
-      boxShadow: '0 4px 10px rgba(0,0,0,0.02)'
-    },
-    ghost: {
-      background: 'transparent',
-      color: 'var(--text-muted)'
-    },
-    premium: {
-      background: 'var(--premium-gradient)',
-      color: 'white',
-      border: 'none',
-      boxShadow: '0 8px 20px -6px rgba(245, 158, 11, 0.4)',
-      fontWeight: '700'
-    }
-  };
-
-  return (
-    <button
-      onClick={onClick}
-      style={{ ...baseStyle, ...variants[variant], ...style }}
-      className={`accessible-btn ${className}`}
-      {...props}
-    >
-      {children}
-    </button>
-  );
-};
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -264,52 +188,7 @@ const Header = () => {
             👑 Premium
           </AccessibleButton>
 
-          <button
-            onClick={() => {
-              const event = new CustomEvent('toggle-accessibility-menu');
-              document.dispatchEvent(event);
-            }}
-            className="desktop-only"
-            aria-label="Open Accessibility Menu"
-            style={{
-              background: 'var(--bg-secondary)',
-              border: '1px solid var(--border)',
-              borderRadius: '50%',
-              width: '40px',
-              height: '40px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              color: 'var(--text-primary)',
-              marginLeft: '8px',
-              transition: 'all 0.3s ease'
-            }}
-          >
-            <Accessibility size={20} />
-          </button>
-
-          <button
-            onClick={toggleTheme}
-            className="desktop-only"
-            aria-label="Toggle dark mode"
-            style={{
-              background: 'var(--bg-secondary)',
-              border: '1px solid var(--border)',
-              borderRadius: '50%',
-              width: '40px',
-              height: '40px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              color: 'var(--text-primary)',
-              marginLeft: '8px',
-              transition: 'all 0.3s ease'
-            }}
-          >
-            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-          </button>          <AccessibleButton variant="ghost" className="desktop-only nav-link-hover" onClick={() => navigate('/interview-prep')} aria-label="Practice Interviews">Interview Prep</AccessibleButton>
+          <AccessibleButton variant="ghost" className="desktop-only nav-link-hover" onClick={() => navigate('/interview-prep')} aria-label="Practice Interviews">Interview Prep</AccessibleButton>
           <AccessibleButton variant="ghost" className="desktop-only nav-link-hover" onClick={() => navigate('/resume-builder')} aria-label="AI Resume Builder">AI Resume</AccessibleButton>
           {/* <AccessibleButton variant="ghost" className="desktop-only nav-link-hover" onClick={() => navigate('/library')} aria-label="AI Library">Library</AccessibleButton> */}
 
@@ -899,12 +778,18 @@ const AppLayout = () => {
             alignItems: 'center',
             justifyContent: 'center',
             boxShadow: '0 8px 24px rgba(102, 126, 234, 0.3)',
-            zIndex: 9998,
+            zIndex: 9991, // Chatbot lowest
           }}
         >
           <MessageCircle size={24} />
         </button>
       )}
+
+      {/* Floating Screen Reader Button (Standalone) */}
+      <ScreenReader />
+
+      {/* Floating Voice Control Mic (Standalone) */}
+      <VoiceControl />
 
       {/* Unified Accessibility Menu */}
       <AccessibilityMenu />

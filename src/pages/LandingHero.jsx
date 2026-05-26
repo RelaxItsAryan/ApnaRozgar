@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { ShieldCheck, Zap, Eye, Bot, FileText, Mic, Briefcase, Settings, Target } from 'lucide-react';
-import { AccessibleButton } from '../App';
+import { AccessibleButton } from '../components/AccessibleButton';
 import heroImg from '../assets/premium_hero_bg.png';
 import interview from '../assets/interview.jpg';
 import interview1 from '../assets/laughing.jpg';

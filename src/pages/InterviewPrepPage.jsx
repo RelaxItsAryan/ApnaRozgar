@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { ExternalLink, Video, CheckCircle, BrainCircuit } from 'lucide-react';
-import { AccessibleButton } from '../App';
+import { AccessibleButton } from '../components/AccessibleButton';
 import { useAuth } from '../context/AuthContext';
 import PremiumLockScreen from '../components/PremiumLockScreen';
 

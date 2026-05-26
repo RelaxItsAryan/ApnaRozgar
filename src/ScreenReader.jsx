@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Volume2, VolumeX, Pause, Play, Settings } from 'lucide-react';
+import { useTextToSpeech } from './hooks/useTextToSpeech';
 
 /**
  * ScreenReader Component
@@ -9,6 +11,7 @@ import { Volume2, VolumeX, Pause, Play, Settings } from 'lucide-react';
  */
 export default function ScreenReader({ embedded = false }) {
   const [isOpen, setIsOpen] = useState(embedded ? true : false);
+  console.log('ScreenReader rendering, embedded:', embedded, 'isOpen:', isOpen);
   const [isReading, setIsReading] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [selectedText, setSelectedText] = useState('');
@@ -20,8 +23,30 @@ export default function ScreenReader({ embedded = false }) {
   const [showSettings, setShowSettings] = useState(false);
   const [currentWord, setCurrentWord] = useState('');
   const [isHovered, setIsHovered] = useState(false);
-  
+
+  const location = useLocation();
   const utteranceRef = useRef(null);
+
+  // Track auto-reading preference (saved in localStorage)
+  const [autoStart, setAutoStart] = useState(() => {
+    return localStorage.getItem('sr_auto_start') === 'true';
+  });
+
+  // Effect to automatically start reading when location changes
+  useEffect(() => {
+    if (autoStart) {
+      // Give a tiny delay for page content to settle
+      const timer = setTimeout(() => {
+        readPage();
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [location.pathname, autoStart]);
+
+  // Persist autoStart setting
+  useEffect(() => {
+    localStorage.setItem('sr_auto_start', autoStart.toString());
+  }, [autoStart]);
 
   // Load available voices
   useEffect(() => {
@@ -30,12 +55,12 @@ export default function ScreenReader({ embedded = false }) {
       if (v.length > 0) {
         const voicesArray = Array.from(v);
         setVoices(voicesArray);
-        
+
         // Prioritize Microsoft Ravi, then any English (India) voice, then any English voice
         const raviVoice = voicesArray.find(voice => voice.name.includes('Ravi'));
         const indianVoice = voicesArray.find(voice => voice.lang === 'en-IN' || voice.lang === 'en_IN');
         const englishVoice = voicesArray.find(voice => voice.lang.startsWith('en'));
-        
+
         const bestVoice = raviVoice || indianVoice || englishVoice || voicesArray[0];
         setSelectedVoice(bestVoice);
         return true;
@@ -95,7 +120,7 @@ export default function ScreenReader({ embedded = false }) {
     utterance.rate = rate;
     utterance.pitch = pitch;
     utterance.volume = volume;
-    
+
     if (selectedVoice) {
       utterance.voice = selectedVoice;
     }
@@ -152,19 +177,20 @@ export default function ScreenReader({ embedded = false }) {
         <div
           style={{
             position: 'fixed',
-            bottom: '100px',
-            right: '24px',
+            bottom: '72px',
+            left: '18px',
             display: 'flex',
             alignItems: 'center',
+            flexDirection: 'row-reverse',
             gap: '12px',
-            zIndex: 9998,
+            zIndex: 9993,
           }}
         >
           {/* Text Label */}
           <motion.div
             initial={{ opacity: 0, x: 20, scale: 0.8 }}
-            animate={{ 
-              opacity: (isHovered || isReading) ? 1 : 0, 
+            animate={{
+              opacity: (isHovered || isReading) ? 1 : 0,
               x: (isHovered || isReading) ? 0 : 20,
               scale: (isHovered || isReading) ? 1 : 0.8
             }}
@@ -184,7 +210,7 @@ export default function ScreenReader({ embedded = false }) {
           >
             🔊 {isReading ? 'Reading...' : 'Read Aloud'}
           </motion.div>
-          
+
           {/* Button */}
           <motion.button
             onClick={() => setIsOpen(!isOpen)}
@@ -229,8 +255,8 @@ export default function ScreenReader({ embedded = false }) {
             overflow: 'hidden',
           } : {
             position: 'fixed',
-            bottom: '170px',
-            right: '24px',
+            bottom: '230px',
+            left: '24px',
             width: '320px',
             background: 'var(--card-bg)',
             borderRadius: '16px',
@@ -263,9 +289,9 @@ export default function ScreenReader({ embedded = false }) {
               textAlign: 'center',
             }}>
               <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Now reading:</span>
-              <p style={{ 
-                margin: '6px 0 0', 
-                fontSize: '1.5rem', 
+              <p style={{
+                margin: '6px 0 0',
+                fontSize: '1.5rem',
                 fontWeight: 700,
                 color: 'var(--accent-purple)',
               }}>
@@ -484,6 +510,19 @@ export default function ScreenReader({ embedded = false }) {
                     style={{ width: '100%', height: '8px' }}
                   />
                 </label>
+
+                {/* Auto-Start Toggle */}
+                <label style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '20px', cursor: 'pointer' }}>
+                  <input
+                    type="checkbox"
+                    checked={autoStart}
+                    onChange={(e) => setAutoStart(e.target.checked)}
+                    style={{ width: '20px', height: '20px', cursor: 'pointer' }}
+                  />
+                  <span style={{ fontSize: '1rem', fontWeight: 600 }}>
+                    Auto-read on page change
+                  </span>
+                </label>
               </div>
             )}
           </div>
@@ -504,24 +543,4 @@ export default function ScreenReader({ embedded = false }) {
   );
 }
 
-/**
- * Hook for programmatic text-to-speech
- */
-export function useTextToSpeech() {
-  const speak = (text, options = {}) => {
-    window.speechSynthesis.cancel();
-    
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = options.rate || 1;
-    utterance.pitch = options.pitch || 1;
-    utterance.volume = options.volume || 1;
-    
-    window.speechSynthesis.speak(utterance);
-  };
 
-  const stop = () => window.speechSynthesis.cancel();
-  const pause = () => window.speechSynthesis.pause();
-  const resume = () => window.speechSynthesis.resume();
-
-  return { speak, stop, pause, resume };
-}

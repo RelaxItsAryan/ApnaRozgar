@@ -8,7 +8,7 @@ import {
   Globe, Check, AlertCircle
 } from 'lucide-react';
 import { useVoiceControl, useVoiceCommands } from './useVoiceControl';
-import { announceToScreenReader } from './App';
+import { announceToScreenReader } from './utils/a11y';
 
 const STORAGE_KEY = 'voice-control-settings';
 
@@ -334,6 +334,52 @@ export default function VoiceControl({ embedded = false }) {
         }
       }
     },
+    'magic apply': async () => {
+      if (!isAuthenticated) {
+        navigate('/auth');
+        showFeedback('Please sign in first', 'info');
+        return;
+      }
+
+      showFeedback('Starting magic application workflow...', 'info');
+
+      // Step 1: Open first available job if on listings page
+      if (location.pathname === '/jobs') {
+        const firstJob = document.querySelector('[data-voice-command="view and apply"]');
+        if (firstJob) {
+          firstJob.click();
+          // Wait for load
+          setTimeout(() => commands['magic apply'](), 1500);
+          return;
+        }
+      }
+
+      // Step 2: Handle Job Detail page
+      const applyBtn = document.getElementById('apply-job-btn');
+      if (applyBtn) {
+        // If it says "✓ Applied", stop
+        if (applyBtn.innerText.includes('Applied')) {
+          showFeedback('You have already applied for this job', 'success');
+          return;
+        }
+
+        applyBtn.click();
+        showFeedback('Filling details and applying...', 'info');
+
+        // Final click for confirmation
+        setTimeout(() => {
+          const confirmBtn = document.getElementById('apply-job-btn');
+          if (confirmBtn) {
+            confirmBtn.click();
+            showFeedback('Job Application Submitted Successfully!', 'success');
+          }
+        }, 1000);
+      } else {
+        showFeedback('No apply button found. Please navigate to a job.', 'error');
+      }
+    },
+    'automate': () => commands['magic apply'](),
+    'workflow': () => commands['magic apply'](),
   };
 
   // Helper function to find and type in chat input
@@ -538,6 +584,15 @@ export default function VoiceControl({ embedded = false }) {
       ]
     },
     {
+      title: 'Automation',
+      icon: Zap,
+      commands: [
+        { phrase: '"Magic apply"', action: 'Auto-apply to the first job' },
+        { phrase: '"Automate"', action: 'Execute smart workflow' },
+        { phrase: '"Workflow"', action: 'Run multi-step application' },
+      ]
+    },
+    {
       title: 'Interaction',
       icon: MousePointer,
       commands: [
@@ -662,58 +717,6 @@ export default function VoiceControl({ embedded = false }) {
               </motion.span>
             )}
           </motion.div>
-
-          {/* Main Toggle Button */}
-          <motion.button
-            onClick={() => setIsOpen(!isOpen)}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            aria-label={isOpen ? 'Close voice control' : 'Open voice control'}
-            aria-expanded={isOpen}
-            style={{
-              width: '56px',
-              height: '56px',
-              borderRadius: '50%',
-              background: isListening
-                ? 'var(--success)'
-                : 'var(--accent-purple)',
-              color: 'white',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: isListening
-                ? '0 4px 20px rgba(5, 150, 105, 0.5)'
-                : '0 4px 20px var(--accent-purple-glow)',
-              transition: 'all 0.3s ease',
-              position: 'relative',
-              overflow: 'hidden',
-            }}
-          >
-            {isListening && (
-              <motion.div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  borderRadius: '50%',
-                  border: '3px solid rgba(255,255,255,0.5)',
-                }}
-                animate={{
-                  scale: [1, 1.5, 1],
-                  opacity: [0.8, 0, 0.8],
-                }}
-                transition={{
-                  duration: 1.5,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
-              />
-            )}
-            {isOpen ? <X size={24} /> : <Mic size={24} />}
-          </motion.button>
         </div>
       )}
 

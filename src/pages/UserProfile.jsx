@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { User, Mail, Phone, MapPin, Briefcase, Edit3, LogOut, Star, Shield, Settings, ChevronRight, BookOpen, Clock, CheckCircle, Loader2, Crown, FileCheck, AlertCircle, Send } from 'lucide-react';
-import { AccessibleButton } from '../App';
+import { AccessibleButton } from '../components/AccessibleButton';
 import { useAuth } from '../context/AuthContext';
 import { getCandidateProfile, updateCertificationStatus } from '../firebase/candidates';
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Briefcase, MapPin, DollarSign, Clock, ArrowLeft, CheckCircle, Loader2 } from 'lucide-react';
-import { AccessibleButton } from '../App';
+import { AccessibleButton } from '../components/AccessibleButton';
 import { getJobById, applyToJob } from '../firebase/jobs';
 import { useAuth } from '../context/AuthContext';
 

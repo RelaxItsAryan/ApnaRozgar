@@ -12,7 +12,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { updateUserProfile } from '../firebase/auth';
-import { AccessibleButton } from '../App';
+import { AccessibleButton } from '../components/AccessibleButton';
 
 const PricingPage = () => {
   const { user, userProfile, userType, refreshProfile } = useAuth();

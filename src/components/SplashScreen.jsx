@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import faviconImg from '../public/favicon.png';
+import splashBg from '../assets/Splash.png';
 
 const SplashScreen = ({ finishLoading }) => {
   const [step, setStep] = useState(0);
@@ -36,7 +37,7 @@ const SplashScreen = ({ finishLoading }) => {
         left: 0,
         width: '100%',
         height: '100%',
-        backgroundColor: '#5e5656ff',
+        backgroundColor: '#0d766b',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -45,6 +46,25 @@ const SplashScreen = ({ finishLoading }) => {
         overflow: 'hidden'
       }}
     >
+      {/* Blurred Background Image Layer */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        backgroundImage: `url(${splashBg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        filter: 'blur(6px)',
+        transform: 'scale(1.05)', // prevent blur edge artifacts
+        zIndex: 0,
+      }} />
+      {/* Dark overlay for readability */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        background: 'rgba(13, 118, 107, 0.45)',
+        zIndex: 1,
+      }} />
       {/* Background Decorative Elements */}
       <motion.div
         animate={{
@@ -61,7 +81,8 @@ const SplashScreen = ({ finishLoading }) => {
           borderRadius: '50%',
           top: '-10%',
           left: '-10%',
-          pointerEvents: 'none'
+          pointerEvents: 'none',
+          zIndex: 2,
         }}
       />
       <motion.div
@@ -77,13 +98,14 @@ const SplashScreen = ({ finishLoading }) => {
           height: '500px',
           background: 'radial-gradient(circle, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0) 70%)',
           borderRadius: '50%',
+          zIndex: 2,
           bottom: '-5%',
           right: '-5%',
           pointerEvents: 'none'
         }}
       />
 
-      <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 3 }}>
         {/* Logo Animation */}
         <motion.div
           initial={{ scale: 0, rotate: -180, opacity: 0 }}

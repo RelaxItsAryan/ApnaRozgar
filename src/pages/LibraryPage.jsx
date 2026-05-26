@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { BookOpen, Search, Loader2, Library, GraduationCap, ArrowRight, Star } from 'lucide-react';
 import { getGroqBookRecommendations } from '../services/groqService';
-import { AccessibleButton, announceToScreenReader } from '../App';
+import { AccessibleButton } from '../components/AccessibleButton';
+import { announceToScreenReader } from '../utils/a11y';
 
 const LibraryPage = () => {
   const [topic, setTopic] = useState('');

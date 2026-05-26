@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, ChevronRight, Upload, X } from 'lucide-react';
-import { AccessibleButton } from '../App';
+import { AccessibleButton } from '../components/AccessibleButton';
 import { useAuth } from '../context/AuthContext';
 import { saveCandidateProfile } from '../firebase/candidates';
 import confetti from 'canvas-confetti';
