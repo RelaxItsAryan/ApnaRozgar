@@ -1,13 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Send, Sparkles, User, Bot, Loader2, Mail, Phone, MapPin, Globe, Briefcase, NotebookText
+  Send, Sparkles, User, Bot, Loader2, Mail, Phone, MapPin, Globe, Briefcase, NotebookText, Mic, MicOff
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getGroqResumeExtraction } from '../services/groqService';
 // import aiResumeUiImage from '../assets/ai_resume_ui.png';
 import { useAuth } from '../context/AuthContext';
 import PremiumLockScreen from '../components/PremiumLockScreen';
+import { useVoiceControl } from '../useVoiceControl';
 
 const ResumeBuilder = () => {
   const { userProfile, loading } = useAuth();
@@ -22,6 +23,37 @@ const ResumeBuilder = () => {
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
+
+  const {
+    isListening,
+    transcript,
+    interimTranscript,
+    startListening,
+    stopListening,
+    toggleListening,
+    error: voiceError,
+    isSupported: isVoiceSupported
+  } = useVoiceControl({
+    onResult: (text) => {
+      // Append text with a space if there's already content
+      setInputValue(prev => {
+        const trimmed = prev.trim();
+        return trimmed ? `${trimmed} ${text}` : text;
+      });
+    }
+  });
+
+  // Sync interim results for live visual feedback in the input field
+  // but don't commit them to the final input state yet
+  const displayValue = isListening && interimTranscript 
+    ? (inputValue.trim() ? `${inputValue.trim()} ${interimTranscript}` : interimTranscript)
+    : inputValue;
+
+  useEffect(() => {
+    if (voiceError) {
+      console.error("Voice Error:", voiceError);
+    }
+  }, [voiceError]);
 
   const [resumeData, setResumeData] = useState({
     name: "",
@@ -274,20 +306,42 @@ const ResumeBuilder = () => {
         </div>
 
         <div style={{ padding: '20px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+          {voiceError && (
+             <motion.div 
+               initial={{ opacity: 0, y: 10 }}
+               animate={{ opacity: 1, y: 0 }}
+               style={{ 
+                 color: '#f87171', 
+                 fontSize: '0.8rem', 
+                 marginBottom: '10px', 
+                 padding: '8px', 
+                 background: 'rgba(239, 68, 68, 0.1)', 
+                 borderRadius: '8px',
+                 display: 'flex',
+                 alignItems: 'center',
+                 gap: '8px'
+               }}
+             >
+               <AlertCircle size={14} /> {voiceError}
+             </motion.div>
+          )}
+          
           <div style={{
             display: 'flex',
             gap: '12px',
             background: 'rgba(0,0,0,0.2)',
-            border: '1px solid rgba(255,255,255,0.1)',
+            border: isListening ? '1px solid var(--accent-blue)' : '1px solid rgba(255,255,255,0.1)',
             borderRadius: '16px',
-            padding: '8px'
+            padding: '8px',
+            transition: 'border-color 0.3s ease'
           }}>
             <input
               type="text"
-              value={inputValue}
+              value={displayValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyPress}
-              placeholder="Type your answer here..."
+              placeholder={isListening ? "Listening... (Talk now)" : (!isVoiceSupported ? "Voice not supported" : "Type or speak your answer...")}
+              disabled={!isVoiceSupported && !inputValue}
               style={{
                 flex: 1,
                 background: 'transparent',
@@ -298,9 +352,50 @@ const ResumeBuilder = () => {
                 fontSize: '0.95rem'
               }}
             />
+            
             <button
-              onClick={sendMessage}
-              disabled={isTyping}
+              onClick={toggleListening}
+              disabled={!isVoiceSupported}
+              title={!isVoiceSupported ? "Voice not supported in this browser" : (isListening ? "Stop Listening" : "Start Voice Input")}
+              style={{
+                background: isListening ? 'var(--danger)' : 'rgba(255,255,255,0.05)',
+                border: 'none',
+                minWidth: '44px',
+                minHeight: '44px',
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: isVoiceSupported ? 'pointer' : 'not-allowed',
+                transition: 'all 0.3s ease',
+                position: 'relative',
+                overflow: 'hidden',
+                opacity: isVoiceSupported ? 1 : 0.5
+              }}
+            >
+              {isListening && (
+                <motion.div
+                  initial={{ scale: 0.8, opacity: 0.5 }}
+                  animate={{ scale: 1.8, opacity: 0 }}
+                  transition={{ repeat: Infinity, duration: 1 }}
+                  style={{
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                    background: 'rgba(255,255,255,0.3)',
+                    borderRadius: '50%'
+                  }}
+                />
+              )}
+              {isListening ? <MicOff size={18} color="white" /> : <Mic size={18} color={isVoiceSupported ? "var(--text-muted)" : "#444"} />}
+            </button>
+
+            <button
+              onClick={() => {
+                if (isListening) stopListening();
+                sendMessage();
+              }}
+              disabled={isTyping || (!inputValue.trim() && !interimTranscript)}
               style={{
                 background: 'var(--primary-gradient)',
                 border: 'none',
@@ -311,12 +406,17 @@ const ResumeBuilder = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
-                opacity: isTyping || !inputValue.trim() ? 0.5 : 1
+                opacity: isTyping || (!inputValue.trim() && !interimTranscript) ? 0.5 : 1
               }}
             >
               <Send size={18} color="white" />
             </button>
           </div>
+          {isVoiceSupported && !isListening && !inputValue && (
+            <p style={{ margin: '8px 0 0', fontSize: '0.75rem', color: 'var(--text-muted)', textAlign: 'center' }}>
+              Tip: Click the mic and tell me about your projects or skills!
+            </p>
+          )}
         </div>
       </motion.div>
 
