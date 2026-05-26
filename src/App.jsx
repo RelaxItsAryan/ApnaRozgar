@@ -188,6 +188,7 @@ const Header = () => {
             👑 Premium
           </AccessibleButton>
 
+
           <AccessibleButton variant="ghost" className="desktop-only nav-link-hover" onClick={() => navigate('/interview-prep')} aria-label="Practice Interviews">Interview Prep</AccessibleButton>
           <AccessibleButton variant="ghost" className="desktop-only nav-link-hover" onClick={() => navigate('/resume-builder')} aria-label="AI Resume Builder">AI Resume</AccessibleButton>
           {/* <AccessibleButton variant="ghost" className="desktop-only nav-link-hover" onClick={() => navigate('/library')} aria-label="AI Library">Library</AccessibleButton> */}
